@@ -38,10 +38,49 @@ router.post('/addnote', fetchuser,
         catch(error){
             console.error(error.message);
             res.status(500).send("Internal Server Error");
-        }
+        }  
+})
 
+router.put('/updatenote/:id', fetchuser,
+    // body('title', 'Title should be atleat 3 characters long').isLength({min: 3}),
+    // body('description', 'Description should be atleast 5 charcters long').isLength({min: 5}),
+
+    async (req, res) => {
+
+        try{
+            const {title, description, tag} = req.body;
+            
+            const newNote = {};
+            if(title){
+                newNote.title = title;        
+            }
+            if(description)
+            {
+                newNote.description = description;
+            }
+            if(tag)
+            {
+                newNote.tag = tag;
+            }
+
+            let note = await Notes.findById(req.params.id);
+            if(!note)
+            {
+                return res.status(404).send("Not Found");
+            }
+            if(note.user.toString() !== req.user.id)
+            {
+                return res.status(401).send("Not Allowed");
+            }
+
+            note = await Notes.findByIdAndUpdate(req.params.id, {$set: newNote}, {new: true});
+            res.json({note});
         
-    
+        }
+        catch(error){
+            console.error(error.message);
+            res.status(500).send("Internal Server Error");
+        }  
 })
 
 module.exports = router;
