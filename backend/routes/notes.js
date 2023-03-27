@@ -44,7 +44,6 @@ router.post('/addnote', fetchuser,
 router.put('/updatenote/:id', fetchuser,
     // body('title', 'Title should be atleat 3 characters long').isLength({min: 3}),
     // body('description', 'Description should be atleast 5 charcters long').isLength({min: 5}),
-
     async (req, res) => {
 
         try{
@@ -75,6 +74,31 @@ router.put('/updatenote/:id', fetchuser,
 
             note = await Notes.findByIdAndUpdate(req.params.id, {$set: newNote}, {new: true});
             res.json({note});
+        
+        }
+        catch(error){
+            console.error(error.message);
+            res.status(500).send("Internal Server Error");
+        }  
+})
+
+router.delete('/deletenote/:id', fetchuser,
+    async (req, res) => {
+
+        try{
+
+            let note = await Notes.findById(req.params.id);
+            if(!note)
+            {
+                return res.status(404).send("Not Found");
+            }
+            if(note.user.toString() !== req.user.id)
+            {
+                return res.status(401).send("Not Allowed");
+            }
+
+            note = await Notes.findByIdAndDelete(req.params.id);
+            res.json({"Success": "Note Deleted", note: note});
         
         }
         catch(error){
