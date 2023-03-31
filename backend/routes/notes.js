@@ -46,6 +46,8 @@ router.put('/updatenote/:id', fetchuser,
     // body('description', 'Description should be atleast 5 charcters long').isLength({min: 5}),
     async (req, res) => {
 
+        // const {title, description, tag} = req.body;
+
         try{
             const {title, description, tag} = req.body;
             

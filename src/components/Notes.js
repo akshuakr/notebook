@@ -4,14 +4,16 @@ import Addnote from "./Addnote";
 import Noteitem from "./Noteitem";
 
 const Notes = () => {
-    const { notes, getNotes } = useContext(noteContext);
+    const { notes, getNotes, editNote } = useContext(noteContext);
     useEffect(() => {
         getNotes();
         // eslint-disable-next-line
     }, []);
 
     const ref = useRef(null);
+    const refClose = useRef(null);
     const [note, setNote] = useState({
+        id: "",
         etitle: "",
         edescription: "",
         etag: "",
@@ -20,14 +22,16 @@ const Notes = () => {
     const updateNote = (currentNote) => {
         ref.current.click();
         setNote({
+            id: currentNote._id,
             etitle: currentNote.title,
             edescription: currentNote.description,
-            etag: currentNote.tag,
+            etag: currentNote.tag
         });
     };
 
     const handleClick = (e) => {
-        e.preventDefault();
+        editNote(note.id, note.etitle, note.edescription, note.etag);
+        refClose.current.click();
     };
     const onChange = (e) => {
         setNote({ ...note, [e.target.name]: e.target.value });
@@ -35,7 +39,7 @@ const Notes = () => {
 
     return (
         <>
-            <Addnote />
+            <Addnote/>
 
             <button
                 type='button'
@@ -71,7 +75,7 @@ const Notes = () => {
                             <form>
                                 <div className='mb-3'>
                                     <label
-                                        htmlFor='etitle'
+                                        htmlFor='title'
                                         className='form-label'
                                     >
                                         Title
@@ -88,7 +92,7 @@ const Notes = () => {
                                 </div>
                                 <div className='mb-3'>
                                     <label
-                                        htmlFor='edescription'
+                                        htmlFor='description'
                                         className='form-label'
                                     >
                                         Description
@@ -104,7 +108,7 @@ const Notes = () => {
                                 </div>
                                 <div className='mb-3'>
                                     <label
-                                        htmlFor='etag'
+                                        htmlFor='tag'
                                         className='form-label'
                                     >
                                         Tag
@@ -125,6 +129,7 @@ const Notes = () => {
                                 type='button'
                                 className='btn btn-secondary'
                                 data-bs-dismiss='modal'
+                                ref = {refClose}
                             >
                                 Close
                             </button>
