@@ -85,6 +85,8 @@ const Notes = () => {
                                         className='form-control'
                                         id='etitle'
                                         name='etitle'
+                                        minLength={3}
+                                        required
                                         value={note.etitle}
                                         aria-describedby='emailHelp'
                                         onChange={onChange}
@@ -102,6 +104,8 @@ const Notes = () => {
                                         className='form-control'
                                         id='edescription'
                                         name='edescription'
+                                        minLength={5}
+                                        required
                                         value={note.edescription}
                                         onChange={onChange}
                                     ></textarea>
@@ -136,6 +140,7 @@ const Notes = () => {
                             <button
                                 onClick={handleClick}
                                 type='button'
+                                disabled={note.etitle.length < 3 || note.edescription.length < 5}
                                 className='btn btn-primary'
                             >
                                 Update Note
@@ -147,6 +152,9 @@ const Notes = () => {
 
             <div className='row my-3'>
                 <h2>Your Notes</h2>
+                <div className="container">
+                {notes.length === 0 &&  'No Notes to Display' }
+                </div>
                 {notes.map((note) => {
                     return (
                         <Noteitem
